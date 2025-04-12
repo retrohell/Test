@@ -6,20 +6,17 @@
 
 export function Header() {
     return (
-        <header className="grid grid-cols-3 items-center justify-between ">
-            <div className="col-span-3">
-                <h1 className="text-2xl font-bold">Welcome to the Task App</h1>
-            </div>
-            <nav>
-                <div className="flex col-span-3">
-                    <div className="card p-2 rounded">
+        <header className={"grid grid-cols-3 items-baseline"}>
+            <div className={"col-span-3"}>
+                <div className={"flex col-span-3"}>
+                    <div className={"card p-1 rounded"}>
                         <a href="/" className="hover:underline">Task list</a>
                     </div>
-                    <div className="card p-2 rounded">
+                    <div className={"card p-1 rounded"}>
                         <a href="/create" className="hover:underline">Create task</a>
                     </div>
                 </div>
-            </nav>
+            </div>
         </header>
     );
 }

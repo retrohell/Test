@@ -7,7 +7,7 @@
 # controllers.py
 from flask import Blueprint, request, jsonify
 from datetime import datetime
-from models import session, Task
+from models import session, Task, Status, Priority
 
 # Crear un Blueprint para los controladores
 controllers = Blueprint('task_controller', __name__)
@@ -26,6 +26,7 @@ def get_task():
         'active': task.active
     } for task in result])
 
+
 @controllers.route('/GetTask/<int:task_id>', methods=['GET'])
 def get_task_by_id(task_id):
     result = session.query(Task).filter(Task.id == task_id, Task.active == True).first()
@@ -43,36 +44,53 @@ def get_task_by_id(task_id):
     else:
         return {'message': 'Task not found'}, 404
 
+@controllers.route('/GetProperty/<int:type_id>', methods=['GET'])
+def get_propertie_by_type(type_id):
+    if type_id == 1:
+        result = session.query(Status).filter(Status.active == True).all()
+    else:
+        result = session.query(Priority).filter(Priority.active == True).all()
+    if result:
+        return jsonify([{
+            'id': property.id,
+            'name': property.name
+        } for property in result])
+    else:
+        return {'message': 'Propertie not found'}, 404
+
 @controllers.route('/Update', methods=['PUT'])
 def update_tasks():
     data = request.get_json()
-    result = session.query(Task).filter(Task.id == data['id']).first()
+    id = data['data'].get('id', None)
+    result = session.query(Task).filter(Task.id == int(id)).first()
     if result:
-        result.title = data['title']
-        result.description = data['description']
-        result.priority_id = data['priority_id']
-        result.status_id = data['status_id']
-        result.expires_at = datetime.strptime(data['expires_at'], '%Y-%m-%d %H:%M:%S')
-        result.active = data.get('active', True)
+        title = data['data'].get('title', None),
+        description = data['data'].get('description', None),
+        priority_id = data['data'].get('priority_id', None),
+        status_id = data['data'].get('status_id', None),
+        active=True
         session.commit()
         return {'message': 'Task updated successfully'}, 200
     else:
         return {'message': 'Task not found'}, 404
 
+
 @controllers.route('/Create', methods=['POST'])
 def create_tasks():
     data = request.get_json()
+    dateExpired = data.get('data', {}).get('expires_at', None)
     new_task = Task(
-        title=data['title'],
-        description=data.get('description'),
-        priority_id=data['priority_id'],
-        status_id=data['status_id'],
-        expires_at=datetime.strptime(data['expires_at'], '%Y-%m-%d %H:%M:%S'),
-        active=data.get('active', True)
+        title=data['data'].get('title', None),
+        description=data['data'].get('description', None),
+        priority_id=data['data'].get('priority_id', None),
+        status_id=data['data'].get('status_id', None),
+        expires_at=datetime.fromisoformat(dateExpired.replace('Z', '+00:00')),
+        active=True
     )
     session.add(new_task)
     session.commit()
     return {'message': 'Task created successfully', 'task_id': new_task.id}, 201
+
 
 @controllers.route('/Delete/<int:task_id>', methods=['DELETE'])
 def delete_task(task_id):
@@ -83,6 +101,7 @@ def delete_task(task_id):
         return {'message': 'Task deleted successfully'}, 200
     else:
         return {'message': 'Task not found'}, 404
+
 
 @controllers.route('/SoftDelete/<int:task_id>', methods=['DELETE'])
 def soft_delete_tasks(task_id):

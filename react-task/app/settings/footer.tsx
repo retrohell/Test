@@ -6,13 +6,15 @@
 
 export function Footer() {
     return (
-        <footer>
-            <div className="flex items-center justify-between p-4 bg-gray-800 text-white">
-                <p className="text-sm">© 2025 Task App. All rights reserved.</p>
-                <div className="flex gap-4">
-                    Make by Daniel Campos
+        <div className={"h-full w-full"}>
+            <div className={"flex items-center justify-between p-4 bg-gray-800 text-white"}>
+                <div>
+                    <p className={"text-sm"}>© 2025 Task App. All rights reserved.</p>
+                </div>
+                <div>
+                    Made by Daniel Campos
                 </div>
             </div>
-        </footer>
+        </div>
     );
 }

@@ -4,8 +4,7 @@
 // It also includes a SQLite database for testing purposes.
 // Import required libraries
 
-export function TaskCreate() {
-    return (
-<></>
-    );
+export interface PropertyModel {
+    id: number;
+    name: string;
 }

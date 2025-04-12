@@ -5,23 +5,17 @@
 // Import required libraries
 
 import type { Route } from "./+types/home";
-import { Header } from "~/settings/header";
-import {Footer} from "~/settings/footer";
 import {TaskList} from "~/task/task-list";
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: "Task app" },
-    { name: "description", content: "Task list" },
+    { title: "Task list" },
+    { name: "description", content: "All active task list" },
   ];
 }
 
 export default function Home() {
   return (<>
-    <Header />
-    <body className="py-2 ">
       <TaskList/>
-    </body>
-    <Footer />
   </>);
 }
